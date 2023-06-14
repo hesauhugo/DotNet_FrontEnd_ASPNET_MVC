@@ -15,6 +15,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = G:\Meu Drive\.Net\DotNet_FrontEnd_ASPNET_MVC
 build_property._RazorSourceGeneratorDebug = 
 
+[G:/Meu Drive/.Net/DotNet_FrontEnd_ASPNET_MVC/Views/Contato/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udGF0b1xpbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [G:/Meu Drive/.Net/DotNet_FrontEnd_ASPNET_MVC/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

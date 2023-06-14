@@ -85,3 +85,179 @@
 * como o retorno é uma `View` significa que dentro da pasta view existirá uma visualização para cada retorno.
 * como por exemplo já mostrado anteriormente na pasta `Views/Home/` 
 * o fluxo é o seguinte: Controller chamada `HomeController`, então dentro da pasta views será procurada uma pasta chamada `Home`, seguindo a rota dentro da pasta `Views/Home/` será producado um arquivo cujo nome é semelhante ao método que retorna a view dentro da `HomeController`, por exemplo o arquivo `Privacy.cshtml`, o caminho da controler será `HomeController/Privacy` e o caminho da view será `Views/Home/Privacy.cshtml`
+
+# Configurando entity framework
+* adicionar pacots necessários
+
+```console
+    dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+    dotnet add package Microsoft.EntityFrameworkCore.Design
+```
+* Criar a classe contato
+```csharp 
+    public class Contato
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string Telefone { get; set; }
+        public bool Ativo { get; set; }
+    }
+```
+* Criar a classe context
+
+```csharp
+    using Microsoft.EntityFrameworkCore;
+    namespace DotNet_FrontEnd_ASPNET_MVC.Context
+    {
+        public class AgendaContext:DbContext
+        {
+            public AgendaContext(DbContextOptions<AgendaContext> options):base(options){
+
+            }
+
+            public DbSet<Contato> Contatos{get; set;}
+        }
+    }
+```
+* Criar a string de conexão
+```json
+    {
+    "Logging": {
+        "LogLevel": {
+        "Default": "Information",
+        "Microsoft.AspNetCore": "Warning"
+        }
+    },
+    "ConnectionStrings": {
+        "ConexaoPadrao":"Server=localhost\\SQLEXPRESS; Initial Catalog=AgendaMvc; Integrated Security=True; TrustServerCertificate=True"
+    }
+    }
+```
+* Importar pacote entityframeworkcore  e a dbcontext adicionando o serviço na classe program
+```csharp
+
+    using Microsoft.EntityFrameworkCore;
+    using DotNet_FrontEnd_ASPNET_MVC.Context;
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    // Add services to the container.
+    builder.Services.AddDbContext<AgendaContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoPadrao")));
+
+    builder.Services.AddControllersWithViews();
+
+```
+# Criando migrations
+* executar no terminal
+
+```console
+    dotnet ef migrations add AdicionaTabelaContato
+```
+
+* aplicar no projeto
+
+```console
+    dotnet ef database update
+```
+
+# Criando a primeira página
+* primeiro dentro da  pasta `Controler` criar uma nova controller contato
+```csharp
+    using Microsoft.AspNetCore.Mvc;
+
+    namespace DotNet_FrontEnd_ASPNET_MVC.Controllers
+    {
+        public class ContatoController: Controller
+        {
+            public IActionResult Index(){
+                return View();
+            }        
+        }
+    }
+```
+* dentro da pasta `Views`  criar uma pasta chamada `Contato` e dentro dela criar um arquivo chamado `index.cshtml` 
+* Com isso a página já está criada, porém sem conteúdo dentro
+
+# Construindo a página de listagem
+* dentro de index.cshtml criar a página
+
+```html
+
+@model IEnumerable<DotNet_FrontEnd_ASPNET_MVC.Models.Contato> 
+
+@{
+    ViewData["Title"] = "Listagem de contatos";
+}
+
+<h2>Contatos</h2>
+
+<p>
+    <a asp-action="Criar">Novo Contato</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ativo)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model=> item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(model=> item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(model=> item.Telefone)
+                </td>
+                <td>
+                    @Html.DisplayFor(model=> item.Ativo)
+                </td>
+                <td>
+                    <a asp-action="Editar" asp-route-id = "item.Id">Editar</a>|
+                    <a asp-action="Detalhes" asp-route-id = "item.Id">Detalhes</a>|
+                    <a asp-action="Deletar" asp-route-id = "item.Id">Deletar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+```
+# Configurando método na controler
+* ajustanco a controler para puxar a página criada anteriormente e entityframeworkcore
+```csharp
+    using Microsoft.AspNetCore.Mvc;
+    using DotNet_FrontEnd_ASPNET_MVC.Context;
+
+    namespace DotNet_FrontEnd_ASPNET_MVC.Controllers
+    {
+        public class ContatoController: Controller
+        {
+            private readonly AgendaContext _agendaContext;
+
+            public ContatoController(AgendaContext context){
+                _agendaContext = context;
+            }
+            public IActionResult Index(){
+                var contatos = _agendaContext.Contatos.ToList();
+
+                return View(contatos);
+            }        
+        }
+    }
+```
