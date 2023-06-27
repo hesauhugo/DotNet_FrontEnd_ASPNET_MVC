@@ -261,3 +261,62 @@
         }
     }
 ```
+# Criando página novo contato
+* primeiro acrescentar na controler `ContatoController`  mais um método para página criar
+* depois dentro de `Views/Contato`  adicionar um novo arquivo chamado `Criar.cshtml` 
+```csharp
+
+    namespace DotNet_FrontEnd_ASPNET_MVC.Controllers
+    {
+        public class ContatoController: Controller
+        {
+            private readonly AgendaContext _agendaContext;
+
+                /*
+                    outros metodos
+                */
+            public IActionResult Criar(){
+                return View();
+            }
+        }
+    }
+
+```
+```html
+    @model DotNet_FrontEnd_ASPNET_MVC.Models.Contato
+
+    @{
+        ViewData["Title"] = "Criar novo contato";
+    }
+
+    <h1>Criar novo contato</h1>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Criar">
+                <div class="form-group">
+                    <label asp-for="Nome" class="control-label"></label>
+                    <input asp-for="Nome" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Telefone" class="control-label"></label>
+                    <input asp-for="Telefone" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Ativo" class="control-label"></label>
+                    <input type="checkbox" asp-for="Ativo" class="form-check-input"/>
+                </div>         
+                <br>   
+                <div class="form-group">
+                    <input type="submit" value="Criar" class="btn btn-primary"/>
+                </div>
+            </form>
+        </div>
+    </div>
+    </hr>
+    <div>
+        <a asp-action="Index">Voltar</a>
+    </div>
+```

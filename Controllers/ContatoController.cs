@@ -19,5 +19,9 @@ namespace DotNet_FrontEnd_ASPNET_MVC.Controllers
 
             return View(contatos);
         }        
+        
+        public IActionResult Criar(){
+            return View();
+        }
     }
 }
