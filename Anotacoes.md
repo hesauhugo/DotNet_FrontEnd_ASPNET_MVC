@@ -320,3 +320,38 @@
         <a asp-action="Index">Voltar</a>
     </div>
 ```
+# Implementando metodo criar como post
+ * o httpget atributo é opcional por isso ele é omitido no método anteriormente criado `Criar` 
+ * ao entrar pela primeira vez na página o método Criar é chamado como get
+ * ao clicar no botão criar é chamado o método post
+ * dentro do método post é validado se os dados do formulários são validos com a condição `ModelState.IsValid` 
+ * Caso seja então salva o contato e redireciona para a página de índice usando o comando `RedirectToAction`
+
+ ```csharp
+
+    namespace DotNet_FrontEnd_ASPNET_MVC.Controllers
+    {
+        public class ContatoController: Controller
+        {
+            private readonly AgendaContext _agendaContext;
+
+            /*
+                outros metodos
+            */
+            
+            [HttpPost]
+            public IActionResult Criar(Contato contato){
+
+                if (ModelState.IsValid)
+                {
+                    _agendaContext.Contatos.Add(contato);
+                    _agendaContext.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(contato);
+            }
+        }
+    }
+
+```
