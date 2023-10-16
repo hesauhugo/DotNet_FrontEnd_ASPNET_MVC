@@ -89,6 +89,16 @@ namespace DotNet_FrontEnd_ASPNET_MVC.Controllers
             return View(contato);
         }
 
+        [HttpPost]
+        public IActionResult Deletar(Contato  contato){
+                        
+            var contatoBanco = _agendaContext.Contatos.Find(contato.Id);
+
+            _agendaContext.Contatos.Remove(contatoBanco);
+            _agendaContext.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
         
     }
 }
