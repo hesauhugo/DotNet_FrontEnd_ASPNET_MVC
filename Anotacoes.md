@@ -1,3 +1,14 @@
+
+# Iniciando repositório git
+```console
+
+    git init -b main
+    git remote add [NomerDORepositorio] [url]
+    git push -u origin main
+    git config credential.username hesauhugo
+    git pull --allow-unrelated-histories origin main
+
+```
 # O padrão mvc
 * O padrão de arquitetura mcv (model-view-controller) separa um aplicativo em três grupos de componentes principais: modelos, exibições e componentes. Esse padrão ajuda a obter a separação de interesses 
 * <a href = "https://learn.microsoft.com/pt-br/aspnet/core/mvc/overview?view=aspnetcore-6.0">Padrao MVC</a>
