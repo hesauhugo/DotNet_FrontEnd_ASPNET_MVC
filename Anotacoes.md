@@ -434,3 +434,23 @@ namespace DotNet_FrontEnd_ASPNET_MVC.Controllers
     <a asp-action="Index">Voltar</a>
 </div>
 ```
+* Em `ContatosControllers.cs` acrescentar o post para editar
+```csharp
+        [HttpPost]
+        public IActionResult Editar(Contato contato)
+        {
+
+            var contatoBanco = _agendaContext.Contatos.Find(contato.Id);
+            contatoBanco.Nome = contato.Nome;
+            contatoBanco.Telefone = contato.Telefone;
+            contatoBanco.Ativo = contato.Ativo;
+
+            _agendaContext.Contatos.Update(contatoBanco);
+            _agendaContext.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+```
+# Criando página detalhes
+* acrescentar dentro de `Views/Contato`  um novo arquivo chamado `Detalhes.cshtml` 
+

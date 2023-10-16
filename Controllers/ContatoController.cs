@@ -8,25 +8,29 @@ using DotNet_FrontEnd_ASPNET_MVC.Models;
 
 namespace DotNet_FrontEnd_ASPNET_MVC.Controllers
 {
-    public class ContatoController: Controller
+    public class ContatoController : Controller
     {
         private readonly AgendaContext _agendaContext;
 
-        public ContatoController(AgendaContext context){
+        public ContatoController(AgendaContext context)
+        {
             _agendaContext = context;
         }
-        public IActionResult Index(){
+        public IActionResult Index()
+        {
             var contatos = _agendaContext.Contatos.ToList();
 
             return View(contatos);
-        }        
-        
-        public IActionResult Criar(){
+        }
+
+        public IActionResult Criar()
+        {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Criar(Contato contato){
+        public IActionResult Criar(Contato contato)
+        {
 
             if (ModelState.IsValid)
             {
@@ -38,15 +42,42 @@ namespace DotNet_FrontEnd_ASPNET_MVC.Controllers
             return View(contato);
         }
 
-        public IActionResult Editar(int id){
-            
+        public IActionResult Editar(int id)
+        {
+
             var contato = _agendaContext.Contatos.Find(id);
-            if(contato ==null){
+            if (contato == null)
+            {
                 return NotFound();
             }
 
             return View(contato);
         }
 
+        [HttpPost]
+        public IActionResult Editar(Contato contato)
+        {
+
+            var contatoBanco = _agendaContext.Contatos.Find(contato.Id);
+            contatoBanco.Nome = contato.Nome;
+            contatoBanco.Telefone = contato.Telefone;
+            contatoBanco.Ativo = contato.Ativo;
+
+            _agendaContext.Contatos.Update(contatoBanco);
+            _agendaContext.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Detalhes(int id)
+        {
+            var contato = _agendaContext.Contatos.Find(id);
+            if (contato == null)
+            {
+                return NotFound();
+            }
+
+            return View(contato);
+        }
     }
 }
