@@ -38,5 +38,15 @@ namespace DotNet_FrontEnd_ASPNET_MVC.Controllers
             return View(contato);
         }
 
+        public IActionResult Editar(int id){
+            
+            var contato = _agendaContext.Contatos.Find(id);
+            if(contato ==null){
+                return NotFound();
+            }
+
+            return View(contato);
+        }
+
     }
 }
