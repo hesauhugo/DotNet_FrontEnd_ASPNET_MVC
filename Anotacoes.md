@@ -453,4 +453,137 @@ namespace DotNet_FrontEnd_ASPNET_MVC.Controllers
 ```
 # Criando página detalhes
 * acrescentar dentro de `Views/Contato`  um novo arquivo chamado `Detalhes.cshtml` 
+```html
+@model DotNet_FrontEnd_ASPNET_MVC.Models.Contato
 
+@{
+    ViewData["Title"]= "Detalhes do contato";
+
+}
+
+<h1>Detalhes</h1>
+
+<div>
+    <dl>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(x=>x.Nome)
+        </dt>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(x=>x.Nome)
+        </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(x=>x.Telefone)
+        </dt>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(x=>x.Telefone)
+        </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(x=>x.Ativo)
+        </dt>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(x=>x.Ativo)
+        </dt>
+    </dl>
+</div>
+<a asp-action="Editar" asp-route-id="@Model.Id">Editar</a>
+<a asp-action="Index">Voltar</a>
+```
+* Acresentar comando no controller
+```csharp
+        public IActionResult Detalhes(int id)
+        {
+            var contato = _agendaContext.Contatos.Find(id);
+            if (contato == null)
+            {
+                return NotFound();
+            }
+
+            return View(contato);
+        }
+```
+# Criando página deletar
+* acrescentar dentro de `Views/Contato`  um novo arquivo chamado `Deletar.cshtml` 
+```html
+@model DotNet_FrontEnd_ASPNET_MVC.Models.Contato
+
+@{
+    ViewData["Title"]= "Deletar contato";
+
+}
+
+<h1 style="color: red;">Deletar Contato?</h1>
+
+<div>
+    <dl>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(x=>x.Nome)
+        </dt>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(x=>x.Nome)
+        </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(x=>x.Telefone)
+        </dt>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(x=>x.Telefone)
+        </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(x=>x.Ativo)
+        </dt>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(x=>x.Ativo)
+        </dt>
+    </dl>
+</div>
+<form asp-action="Deletar">
+<input type="submit" value="Deletar" class="btn btn-danger"
+</form>
+<br>
+<a asp-action="Index">Voltar</a>
+```
+* Acrescentar na controler os seguintes códigos
+```csharp
+public IActionResult Deletar(int id){
+                        var contato = _agendaContext.Contatos.Find(id);
+            if (contato == null)
+            {
+                return NotFound();
+            }
+
+            return View(contato);
+        }
+
+        [HttpPost]
+        public IActionResult Deletar(Contato  contato){
+                        
+            var contatoBanco = _agendaContext.Contatos.Find(contato.Id);
+
+            _agendaContext.Contatos.Remove(contatoBanco);
+            _agendaContext.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+        
+    }
+```
+
+# Alterando Menu
+* No caminho `Views/Shared/` encontrar o arquivo `_Layout.cshtml` 
+* nele acrescentar o seguinte código:
+```html
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Contato"
+            asp-action="Index">Contatos</a>
+    </li>
+```
+* Esse comando vai adicionar um novo menu contato na página.
+* A view que está sendo acionada no momento entra no body; representada pelo arquivo seguinte código:
+```html
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    
+```
